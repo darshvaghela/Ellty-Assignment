@@ -1,0 +1,57 @@
+:root {
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+}
+
+body {
+  margin: 0;
+  display: flex;
+  place-items: center;
+  min-width: 320px;
+  min-height: 100vh;
+  letter-spacing: 0.4;
+  background-color: #ffffff;
+  font-family: "Montserrat", sans-serif;
+}
+
+#root {
+  width: -webkit-fill-available;
+  width: 100%;
+}
+
+.checkbox-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 4px 0;
+}
+
+.checkbox-sub-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 0;
+}
+
+.custom-checkbox .ant-checkbox-checked .ant-checkbox-inner {
+  background-color: #2469f6 !important;
+  border-color: #2469f6 !important;
+}
+
+.ant-btn-primary {
+  background-color: #ffce22;
+  border-color: #ffce22;
+  color: #1f2128;
+}
+
+.ant-btn-primary:hover,
+.ant-btn-primary:focus {
+  color: #1f2128 !important;
+}
+
+.custom-hr {
+  width: 100%;
+  margin: 8px 0;
+  border-color: #cdcdcd !important;
+  border-width: 0.7px !important;
+}
