@@ -1,6 +1,15 @@
-import { Button, Form, Input, Row, Select, Space, Typography } from "antd";
+import {
+  Button,
+  Form,
+  Input,
+  Row,
+  Select,
+  Space,
+  Typography,
+  Popconfirm,
+} from "antd";
 import { Flex } from "../components/flex";
-import { EditOutlined } from "@ant-design/icons";
+import { EditOutlined, CloseOutlined } from "@ant-design/icons";
 import { useState } from "react";
 import ProductList from "../components/product/product-list";
 import { SelectedItem } from "../type/product";
@@ -8,11 +17,11 @@ import { SelectedItem } from "../type/product";
 const Home = () => {
   const [open, setOpen] = useState(false);
   const [selectedProducts, setSelectedProducts] = useState<SelectedItem[]>([]);
-  const [variantsVisibility, setVariantsVisibility] = useState<boolean[]>([]); 
+  const [variantsVisibility, setVariantsVisibility] = useState<boolean[]>([]);
 
   const toggleVariantsVisibility = (index: number) => {
     const updatedVisibility = [...variantsVisibility];
-    updatedVisibility[index] = !updatedVisibility[index]; 
+    updatedVisibility[index] = !updatedVisibility[index];
     setVariantsVisibility(updatedVisibility);
   };
 
@@ -25,10 +34,8 @@ const Home = () => {
     const updatedProducts = [...selectedProducts];
 
     if (variantIndex === null) {
-      // Update discount inside the product
       updatedProducts[productIndex].product.discount = { amount, type };
     } else {
-      // Update discount inside the specific variant
       updatedProducts[productIndex].variant[variantIndex].discount = {
         amount,
         type,
@@ -36,6 +43,22 @@ const Home = () => {
     }
 
     setSelectedProducts(updatedProducts);
+  };
+
+  const handleRemoveProduct = (index: number) => {
+    const updated = [...selectedProducts];
+    updated.splice(index, 1);
+    setSelectedProducts(updated);
+
+    const updatedVisibility = [...variantsVisibility];
+    updatedVisibility.splice(index, 1);
+    setVariantsVisibility(updatedVisibility);
+  };
+
+  const handleRemoveVariant = (productIndex: number, variantIndex: number) => {
+    const updated = [...selectedProducts];
+    updated[productIndex].variant.splice(variantIndex, 1);
+    setSelectedProducts(updated);
   };
 
   return (
@@ -50,40 +73,37 @@ const Home = () => {
                 key={index}
                 style={{ marginBottom: "24px", width: "100%" }}
               >
-                {/* Product and its Discount */}
                 <div
                   style={{
                     display: "flex",
-                    justifyContent: "space-between",
+                    alignItems: "center", // ensures vertical centering
                     gap: "16px",
+                    width: "100%",
                   }}
                 >
-                  <Form.Item
-                    label={index === 0 ? "Product" : ""}
-                    style={{ flex: 3 }}
-                  >
-                    <Input
-                      readOnly
-                      addonBefore={index + 1}
-                      value={item.product.title}
-                      suffix={<EditOutlined />}
-                      placeholder="Select product"
-                      onFocus={(e) => {
-                        e.target.blur();
-                        setOpen(true);
-                      }}
-                    />
-                  </Form.Item>
+                  <div style={{ flex: 3 }}>
+                    <Form.Item
+                      label={index === 0 ? "Product" : ""}
+                      style={{ marginBottom: 0 }}
+                    >
+                      <Input
+                        readOnly
+                        addonBefore={index + 1}
+                        value={item.product.title}
+                        suffix={<EditOutlined />}
+                        placeholder="Select product"
+                        onFocus={(e) => {
+                          e.target.blur();
+                          setOpen(true);
+                        }}
+                      />
+                    </Form.Item>
+                  </div>
 
-                  <div
-                    style={{
-                      display: "flex",
-                      justifyContent: "space-between",
-                    }}
-                  >
+                  <div style={{ flex: 2 }}>
                     <Form.Item
                       label={index === 0 ? "Discount" : ""}
-                      style={{ flex: 1 }}
+                      style={{ marginBottom: 0 }}
                     >
                       <Input.Group compact style={{ display: "flex" }}>
                         <Form.Item
@@ -125,9 +145,22 @@ const Home = () => {
                       </Input.Group>
                     </Form.Item>
                   </div>
+
+                  <Popconfirm
+                    title="Are you sure to remove this product?"
+                    onConfirm={() => handleRemoveProduct(index)}
+                  >
+                    <Button
+                      type="text"
+                      icon={
+                        <CloseOutlined
+                          style={index === 0 ? { marginTop: 16 } : {}}
+                        />
+                      }
+                    />
+                  </Popconfirm>
                 </div>
 
-                {/* Button to toggle visibility of variants */}
                 <Flex $justifyContent="flex-end" $alignItems="center">
                   <Button
                     type="link"
@@ -139,7 +172,6 @@ const Home = () => {
                   </Button>
                 </Flex>
 
-                {/* Variants with their own discounts */}
                 {variantsVisibility[index] && (
                   <div
                     style={{ marginTop: 16, paddingLeft: 24, paddingRight: 24 }}
@@ -151,6 +183,7 @@ const Home = () => {
                           display: "flex",
                           gap: "16px",
                           marginBottom: 12,
+                          alignItems: "flex-end",
                         }}
                       >
                         <Form.Item style={{ flex: 1 }}>
@@ -160,70 +193,73 @@ const Home = () => {
                             placeholder="Select variant"
                           />
                         </Form.Item>
-                        <div
-                          style={{
-                            display: "flex",
-                            justifyContent: "space-between",
-                          }}
+                        <Form.Item style={{ flex: 2 }}>
+                          <Input.Group compact style={{ display: "flex" }}>
+                            <Form.Item
+                              name={[
+                                "variantDiscounts",
+                                index,
+                                variantIndex,
+                                "amount",
+                              ]}
+                              noStyle
+                            >
+                              <Input
+                                style={{ width: "100px" }}
+                                placeholder="Amount"
+                                value={variant?.discount?.amount || 0}
+                                onChange={(e) =>
+                                  handleDiscountChange(
+                                    index,
+                                    variantIndex,
+                                    e.target.value,
+                                    variant?.discount?.type || "percent"
+                                  )
+                                }
+                              />
+                            </Form.Item>
+                            <Form.Item
+                              name={[
+                                "variantDiscounts",
+                                index,
+                                variantIndex,
+                                "type",
+                              ]}
+                              noStyle
+                            >
+                              <Select
+                                style={{ width: "100px" }}
+                                placeholder="Type"
+                                value={variant?.discount?.type || "percent"}
+                                onChange={(value) =>
+                                  handleDiscountChange(
+                                    index,
+                                    variantIndex,
+                                    variant?.discount?.amount || "0",
+                                    value
+                                  )
+                                }
+                              >
+                                <Select.Option value="percent">
+                                  % Off
+                                </Select.Option>
+                                <Select.Option value="flat">Flat</Select.Option>
+                              </Select>
+                            </Form.Item>
+                          </Input.Group>
+                        </Form.Item>
+                        <Popconfirm
+                          title="Remove this variant?"
+                          onConfirm={() =>
+                            handleRemoveVariant(index, variantIndex)
+                          }
                         >
-                          <Form.Item style={{ flex: 1 }}>
-                            <Input.Group compact style={{ display: "flex" }}>
-                              <Form.Item
-                                name={[
-                                  "variantDiscounts",
-                                  index,
-                                  variantIndex,
-                                  "amount",
-                                ]}
-                                noStyle
-                              >
-                                <Input
-                                  style={{ width: "100px" }}
-                                  placeholder="Amount"
-                                  value={variant?.discount?.amount || 0}
-                                  onChange={(e) =>
-                                    handleDiscountChange(
-                                      index,
-                                      variantIndex,
-                                      e.target.value,
-                                      variant?.discount?.type || "percent"
-                                    )
-                                  }
-                                />
-                              </Form.Item>
-                              <Form.Item
-                                name={[
-                                  "variantDiscounts",
-                                  index,
-                                  variantIndex,
-                                  "type",
-                                ]}
-                                noStyle
-                              >
-                                <Select
-                                  style={{ width: "100px" }}
-                                  placeholder="Type"
-                                  value={variant?.discount?.type || "percent"}
-                                  onChange={(value) =>
-                                    handleDiscountChange(
-                                      index,
-                                      variantIndex,
-                                      variant?.discount?.amount || "0",
-                                      value
-                                    )
-                                  }
-                                >
-                                  <Select.Option value="percent">
-                                    % Off
-                                  </Select.Option>
-                                  <Select.Option value="flat">
-                                    Flat
-                                  </Select.Option>
-                                </Select>
-                              </Form.Item>
-                            </Input.Group>
-                          </Form.Item>
-                        </div>
+                          <Button
+                            type="text"
+                            icon={<CloseOutlined />}
+                            style={{ marginBottom: 24 }}
+                          />
+                        </Popconfirm>
                       </div>
                     ))}
                   </div>
