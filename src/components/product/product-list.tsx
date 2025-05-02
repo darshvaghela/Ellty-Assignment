@@ -65,7 +65,7 @@ const ProductList: FC<ProductListProps> = ({
         }
 
         const result = await response.json();
-        setProducts(result.data || result);
+        setProducts(result);
       } catch (error: unknown) {
         const err = error as Error;
         message.error(
