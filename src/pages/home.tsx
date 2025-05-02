@@ -5,7 +5,7 @@ import { useState } from "react";
 import ProductList from "../components/product/product-list";
 
 const Home = () => {
-  const [drawerVisible, setDrawerVisible] = useState(false);
+  const [open, setOpen] = useState(false);
   return (
     <Flex $flexDirection="column">
       <Typography.Title level={2}>Add Products</Typography.Title>
@@ -19,7 +19,7 @@ const Home = () => {
                 suffix={<EditOutlined />}
                 onFocus={(e) => {
                   e.target.blur();
-                  setDrawerVisible(true);
+                  setOpen(true);
                 }}
               />
             </Form.Item>
@@ -28,10 +28,7 @@ const Home = () => {
             </Form.Item>
           </Space>
         </Form>
-        <ProductList
-          drawerVisible={drawerVisible}
-          closeDrawer={() => setDrawerVisible(false)}
-        />
+        <ProductList open={open} onClose={() => setOpen(false)} />
       </Row>
       <Flex $justifyContent="flex-end" $alignItems="center">
         <Button type="default" size="large">

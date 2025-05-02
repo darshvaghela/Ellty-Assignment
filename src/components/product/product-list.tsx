@@ -2,10 +2,11 @@ import { Divider, message, Modal } from "antd";
 import React, { FC, useCallback, useEffect } from "react";
 
 interface ProductListProps {
-  drawerVisible: boolean;
-  closeDrawer: () => void;
+  open: boolean;
+  onClose: () => void;
 }
-const ProductList: FC<ProductListProps> = ({ drawerVisible, closeDrawer }) => {
+
+const ProductList: FC<ProductListProps> = ({ open, onClose }) => {
   //   const [products, setProducts] = React.useState<Product[]>([]);
   const [search] = React.useState<string>("");
   const [page] = React.useState<number>(1);
@@ -45,7 +46,6 @@ const ProductList: FC<ProductListProps> = ({ drawerVisible, closeDrawer }) => {
 
       const data = await response.json();
       console.log("Fetched products:", data);
-      // Use the data as needed here
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
       console.error("Error fetching products:", error);
@@ -56,14 +56,14 @@ const ProductList: FC<ProductListProps> = ({ drawerVisible, closeDrawer }) => {
   }, [limit, page, search]);
 
   useEffect(() => {
-    drawerVisible && getProducts();
-  }, [drawerVisible, getProducts]);
+    open && getProducts();
+  }, [open, getProducts]);
   return (
     <Modal
       title="Select Product"
-      open={drawerVisible}
+      open={open}
       closeIcon
-      onCancel={closeDrawer}
+      onCancel={onClose}
       width={700}
       style={{ padding: 0 }}
     >
