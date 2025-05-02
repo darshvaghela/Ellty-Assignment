@@ -1,74 +1,44 @@
-import { Card, Checkbox, Button, Layout } from "antd";
-import { useState } from "react";
+import { Button, Form, Input, Row, Space, Typography } from "antd";
 import { Flex } from "../components/flex";
-
-const pages = ["Page 1", "Page 2", "Page 3", "Page 4"];
+import { EditOutlined } from "@ant-design/icons";
+import { useState } from "react";
+import ProductList from "../components/product/product-list";
 
 const Home = () => {
-  const [selectedPages, setSelectedPages] = useState<string[]>([]);
-  const allSelected = selectedPages.length === pages.length;
-
-  const handleSelectAll = (checked: boolean) => {
-    setSelectedPages(checked ? pages : []);
-  };
-
-  const handleSelectPage = (page: string, checked: boolean) => {
-    setSelectedPages(
-      checked
-        ? [...selectedPages, page]
-        : selectedPages.filter((p) => p !== page)
-    );
-  };
-
+  const [drawerVisible, setDrawerVisible] = useState(false);
   return (
-    <Layout style={{ minHeight: "100vh" }}>
-      <Flex
-        $justifyContent="center"
-        $alignItems="center"
-        $flexDirection="column"
-        style={{
-          minHeight: "80vh",
-        }}
-      >
-        <Card
-          style={{
-            width: 370,
-            boxShadow: "0 4px 10px rgba(0,0,0,0.1)",
-          }}
-        >
-          <div className="checkbox-container">
-            <span>All pages</span>
-            <Checkbox
-              checked={allSelected}
-              onChange={(e) => handleSelectAll(e.target.checked)}
-              className="custom-checkbox"
-            />
-          </div>
-          <hr className="custom-hr" />
-          {pages.map((page) => (
-            <div key={page} className="checkbox-sub-container">
-              <span>{page}</span>
-              <Checkbox
-                checked={selectedPages.includes(page)}
-                onChange={(e) => handleSelectPage(page, e.target.checked)}
-                className="custom-checkbox"
+    <Flex $flexDirection="column">
+      <Typography.Title level={2}>Add Products</Typography.Title>
+      <Row>
+        <Form layout="vertical">
+          <Space align="end" size="large" style={{ flexWrap: "wrap" }}>
+            <Form.Item label="Product">
+              <Input
+                readOnly
+                addonBefore={<>1</>}
+                suffix={<EditOutlined />}
+                onFocus={(e) => {
+                  e.target.blur();
+                  setDrawerVisible(true);
+                }}
               />
-            </div>
-          ))}
-          <hr className="custom-hr" />
-          <Button
-            type="primary"
-            block
-            style={{
-              marginTop: 10,
-            }}
-            onClick={() => console.log(selectedPages)}
-          >
-            Done
-          </Button>
-        </Card>
+            </Form.Item>
+            <Form.Item label="Discount">
+              <Button type="primary">Add Discount</Button>
+            </Form.Item>
+          </Space>
+        </Form>
+        <ProductList
+          drawerVisible={drawerVisible}
+          closeDrawer={() => setDrawerVisible(false)}
+        />
+      </Row>
+      <Flex $justifyContent="flex-end" $alignItems="center">
+        <Button type="default" size="large">
+          Add Product
+        </Button>
       </Flex>
-    </Layout>
+    </Flex>
   );
 };
 

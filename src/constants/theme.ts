@@ -1,8 +1,8 @@
 import { createGlobalStyle } from "styled-components";
 
 export const theme = {
-  primary: "#FFCE22",
-  secondary: "#FFCE22",
+  primary: "#008060",
+  secondary: "#008060",
   black: "#000000",
   borderRadius: 4,
   fontFamily: "'Montserrat', sans-serif",

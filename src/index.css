@@ -39,14 +39,21 @@ body {
 }
 
 .ant-btn-primary {
-  background-color: #ffce22;
-  border-color: #ffce22;
-  color: #1f2128;
+  background-color: #008060;
+  border-color: #008060;
+  color: #fff;
+}
+
+.ant-btn-default {
+  border-color: #008060;
+  color: #008060;
+  padding: 0px 30px !important;
+  font-weight:  600;
 }
 
 .ant-btn-primary:hover,
 .ant-btn-primary:focus {
-  color: #1f2128 !important;
+  color: #fff !important;
 }
 
 .custom-hr {
