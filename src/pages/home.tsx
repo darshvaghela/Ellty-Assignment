@@ -8,11 +8,11 @@ import { SelectedItem } from "../type/product";
 const Home = () => {
   const [open, setOpen] = useState(false);
   const [selectedProducts, setSelectedProducts] = useState<SelectedItem[]>([]);
-  const [variantsVisibility, setVariantsVisibility] = useState<boolean[]>([]); // State to control visibility of variants for each product
+  const [variantsVisibility, setVariantsVisibility] = useState<boolean[]>([]); 
 
   const toggleVariantsVisibility = (index: number) => {
     const updatedVisibility = [...variantsVisibility];
-    updatedVisibility[index] = !updatedVisibility[index]; // Toggle the visibility of variants
+    updatedVisibility[index] = !updatedVisibility[index]; 
     setVariantsVisibility(updatedVisibility);
   };
 

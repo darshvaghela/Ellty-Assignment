@@ -102,7 +102,6 @@ const ProductList: FC<ProductListProps> = ({
         (item) => item.product.id === product.id
       );
 
-      // If product is already in selectedItems
       if (productIndex !== -1) {
         const productEntry = prev[productIndex];
         const variantIndex = productEntry.variant.findIndex(
@@ -110,13 +109,11 @@ const ProductList: FC<ProductListProps> = ({
         );
 
         if (variantIndex !== -1) {
-          // Variant is already selected — remove it
           const updatedVariants = productEntry.variant.filter(
             (v) => v.id !== variant.id
           );
 
           if (updatedVariants.length === 0) {
-            // If no variants remain, remove the product entirely
             return prev.filter((_, index) => index !== productIndex);
           } else {
             // Otherwise, update the variants list
@@ -125,7 +122,6 @@ const ProductList: FC<ProductListProps> = ({
             return updated;
           }
         } else {
-          // Variant not yet selected — add it
           const updated = [...prev];
           updated[productIndex] = {
             product,
@@ -134,7 +130,6 @@ const ProductList: FC<ProductListProps> = ({
           return updated;
         }
       } else {
-        // Product not yet in selectedItems — add it with this variant
         return [...prev, { product, variant: [variant] }];
       }
     });
@@ -152,7 +147,6 @@ const ProductList: FC<ProductListProps> = ({
     );
 
     if (allVariantsSelected) {
-      // Remove all variants of this product
       setSelectedItems((prev) =>
         prev.filter((item) => item.product.id !== product.id)
       );
@@ -170,7 +164,6 @@ const ProductList: FC<ProductListProps> = ({
             ...newVariants,
           ];
         } else {
-          // Add new product and all its variants
           updated.push({ product, variant: product.variants });
         }
         return updated;
