@@ -18,9 +18,9 @@
     "react-router-dom": "^6.14.2",
     "react-to-print": "^2.15.1",
     "styled-components": "^6.0.7"
-
   },
   "devDependencies": {
+    "@types/lodash.debounce": "^4.0.9",
     "@types/node": "^20.4.9",
     "@types/react": "^18.2.15",
     "@types/react-dom": "^18.2.7",
